@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#060711" />
+    <meta
+      name="description"
+      content="Cosmic Frontier — a free, browser-based space exploration and colony-building sandbox."
+    />
+    <title>Cosmic Frontier</title>
+  </head>
+  <body>
+    <div id="game"></div>
+
+    <section id="landing-screen" class="landing-screen">
+      <div class="landing-stars"></div>
+      <div class="landing-content">
+        <p class="eyebrow">A FREE BROWSER SANDBOX</p>
+        <h1>COSMIC<br /><span>FRONTIER</span></h1>
+        <p class="tagline">Explore strange worlds. Refine starship fuel. Build homes for new civilizations.</p>
+        <div class="landing-actions">
+          <button id="start-button" class="primary-button">BEGIN EXPEDITION <span>→</span></button>
+          <button id="continue-button" class="ghost-button hidden">CONTINUE SAVE</button>
+        </div>
+        <div class="feature-row">
+          <span>◈ 4 PLANETS</span><span>⌁ SPACE FLIGHT</span><span>⬡ CITY BUILDING</span><span>⟲ AUTO-SAVE</span>
+        </div>
+      </div>
+      <div class="version">EARLY PROTOTYPE · v0.1</div>
+    </section>
+
+    <div id="hud" class="hud hidden">
+      <header class="topbar glass">
+        <div class="brand-mark"><i></i><div><strong>COSMIC FRONTIER</strong><small id="location-label">ORBITAL SPACE</small></div></div>
+        <div class="resource-strip">
+          <div class="resource ferrite"><span>Fe</span><div><small>FERRITE</small><strong id="ferrite-count">0</strong></div></div>
+          <div class="resource carbon"><span>C</span><div><small>CARBON</small><strong id="carbon-count">0</strong></div></div>
+          <div class="resource crystal"><span>Cr</span><div><small>CRYSTAL</small><strong id="crystal-count">0</strong></div></div>
+          <div class="resource credits"><span>¤</span><div><small>CREDITS</small><strong id="credits-count">0</strong></div></div>
+        </div>
+        <button id="menu-button" class="icon-button" aria-label="Open menu">☰</button>
+      </header>
+
+      <aside class="mission-card glass">
+        <div class="panel-kicker">EXPEDITION LOG <span id="mission-count">01 / 05</span></div>
+        <h2 id="mission-title">First Contact</h2>
+        <p id="mission-description">Approach a planet and land on its surface.</p>
+        <div class="progress-track"><i id="mission-progress"></i></div>
+      </aside>
+
+      <aside class="ship-card glass">
+        <div class="panel-kicker">STARSHIP · WAYFARER</div>
+        <div class="fuel-row"><span>FUEL</span><strong id="fuel-value">70%</strong></div>
+        <div class="fuel-track"><i id="fuel-bar"></i></div>
+        <div class="speed-row"><span>VELOCITY</span><strong id="speed-value">0 u/s</strong></div>
+      </aside>
+
+      <div id="target-card" class="target-card glass hidden">
+        <div id="target-icon" class="target-icon">◉</div>
+        <div><small id="target-kind">PLANET</small><strong id="target-name">AURELIA</strong><span id="target-distance">120 u</span></div>
+      </div>
+
+      <div class="crosshair"><i></i><i></i><i></i><i></i></div>
+      <div id="action-prompt" class="action-prompt hidden"><kbd>E</kbd><span>Mine ferrite deposit</span></div>
+
+      <div class="flight-help glass">
+        <span><kbd>WASD</kbd> FLY</span><span><kbd>SHIFT</kbd> BOOST</span><span><kbd>E</kbd> INTERACT</span><span><kbd>B</kbd> BUILD</span>
+      </div>
+
+      <canvas id="radar" width="180" height="180" aria-label="Local radar"></canvas>
+      <div id="toast-stack" class="toast-stack"></div>
+    </div>
+
+    <section id="build-menu" class="side-panel hidden">
+      <div class="side-panel-header">
+        <div><p class="eyebrow">CONSTRUCTION</p><h2>BUILD CATALOG</h2></div>
+        <button class="close-button" data-close="build-menu">×</button>
+      </div>
+      <p class="panel-copy">Select a structure, move the hologram with your ship, then click to deploy it.</p>
+      <div id="build-grid" class="build-grid"></div>
+      <div class="build-tip"><kbd>R</kbd> Rotate &nbsp; <kbd>CLICK</kbd> Place &nbsp; <kbd>ESC</kbd> Cancel</div>
+    </section>
+
+    <section id="refinery-panel" class="modal hidden">
+      <div class="modal-card glass-heavy">
+        <button class="close-button" data-close="refinery-panel">×</button>
+        <p class="eyebrow">PORTABLE REFINERY</p>
+        <h2>SYNTHESIZE LAUNCH FUEL</h2>
+        <div class="recipe-visual"><span class="recipe carbon">10 C</span><b>+</b><span class="recipe crystal">5 Cr</span><b>→</b><span class="recipe fuel">25 FUEL</span></div>
+        <p>Fuse condensed carbon with resonant crystal to create a stable starship propellant.</p>
+        <button id="refine-button" class="primary-button">REFINE 25 FUEL</button>
+      </div>
+    </section>
+
+    <section id="civilization-panel" class="modal hidden">
+      <div class="modal-card civilization-card glass-heavy">
+        <button class="close-button" data-close="civilization-panel">×</button>
+        <p class="eyebrow">COLONY BEACON ONLINE</p>
+        <h2 id="civilization-name">THE AURELIAN COMPACT</h2>
+        <p id="civilization-copy"></p>
+        <div class="colony-stats">
+          <div><small>POPULATION</small><strong id="colony-population">0</strong></div>
+          <div><small>HAPPINESS</small><strong id="colony-happiness">0%</strong></div>
+          <div><small>OUTPUT</small><strong id="colony-output">0 ¤/m</strong></div>
+        </div>
+        <button id="welcome-button" class="primary-button">WELCOME THE SETTLERS</button>
+      </div>
+    </section>
+
+    <section id="pause-menu" class="modal hidden">
+      <div class="modal-card glass-heavy menu-card">
+        <p class="eyebrow">EXPEDITION PAUSED</p><h2>COSMIC FRONTIER</h2>
+        <button id="resume-button" class="primary-button">RESUME</button>
+        <button id="save-button" class="ghost-button">SAVE GAME</button>
+        <button id="reset-button" class="danger-button">RESET EXPEDITION</button>
+        <div class="controls-list">
+          <span><kbd>W S</kbd> Thrust / reverse</span><span><kbd>A D</kbd> Turn</span>
+          <span><kbd>Q E</kbd> Vertical strafe in space</span><span><kbd>SHIFT</kbd> Boost</span>
+          <span><kbd>L</kbd> Land when near a planet</span><span><kbd>T</kbd> Take off from a planet</span>
+          <span><kbd>E</kbd> Mine / interact</span><span><kbd>B</kbd> Open build catalog</span>
+        </div>
+      </div>
+    </section>
+
+    <div id="fade" class="fade"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
