@@ -13,7 +13,7 @@ npm install
 npm run dev
 ```
 
-Open the local address printed by Vite, normally `http://localhost:5173`.
+Open the local address printed by Vite, normally `http://localhost:5173/ballsack/`.
 
 To create a production build:
 
@@ -86,3 +86,9 @@ Good next expansions would include:
 - Original code released under the MIT License. Three.js remains under its own MIT license.
 
 This project is not affiliated with or endorsed by Hello Games.
+
+## GitHub Pages deployment
+
+The repository includes an automated Pages workflow that tests the game, builds the Vite production bundle, and deploys the compiled `dist` directory whenever changes reach `main`.
+
+In the repository, open **Settings → Pages** and set **Source** to **GitHub Actions**. The playable site will then be available at `https://burgess72-1.github.io/ballsack/` after the deployment finishes.
